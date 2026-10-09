@@ -152,7 +152,7 @@ def card(slug, name, price, small, value, desc, full):
     return f"""            <table role="presentation" class="em-card" width="258" cellpadding="0" cellspacing="0" border="0" style="width:258px;max-width:258px;">
               <tr>
                 <td style="border:1px solid #cacaca;border-bottom:0;border-radius:16px 16px 0 0;background-color:#f4f4f2;font-size:0;line-height:0;">
-                  <!-- PLACEHOLDER: {slug}.jpg (516x380) - foto da loja / arte Borges 12/10 -->
+                  <!-- ARTE PARCIAL: {slug}.jpg (516x380) - galao real da loja + lockup tipografico; falta a foto do brinde (Borges 12/10) -->
                   <a href="{LP}" target="_blank" style="text-decoration:none;">
                     <img src="{A}/{slug}.jpg" width="258" height="190" alt="Malbor {name} 3.78L with free {small}" class="em-img-full" style="display:block;width:100%;max-width:258px;height:auto;border:0;border-radius:16px 16px 0 0;" />
                   </a>

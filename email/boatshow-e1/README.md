@@ -42,23 +42,31 @@ Perfect Glass e Max Shield ficam fora — o `check.mjs` falha se forem citados.
 
 ## Arte pendente
 
-Cinco imagens são **placeholders** e estão marcadas no HTML com comentário
-`<!-- PLACEHOLDER: ... -->`; o `check.mjs` conta e avisa quantas restam.
+Dois níveis, ambos marcados no HTML e contados pelo `check.mjs`:
 
-- `hero-boatshow.jpg` (1200x540) — abertura marine, emprestada da peça náutica
-- `product-*.jpg` (516x380, 4 arquivos) — galão + embalagem pequena
+- `<!-- PLACEHOLDER: -->` — **1 imagem**, `hero-boatshow.jpg` (1200x540):
+  abertura marine emprestada da peça náutica, aguardando o Borges.
+- `<!-- ARTE PARCIAL: -->` — **4 imagens**, `product-*.jpg` (516x380): o galão
+  é a foto real da loja; no lugar da foto do brinde há um lockup tipográfico
+  `+ FREE 473ml` / `+ FREE 946ml`. É uma arte vendável como está — não há
+  nenhum aviso de pendência gravado na imagem.
 
-As fotos da loja existem e estão mapeadas em `build/make-boatshow-assets.py`
-(`STORE_PHOTOS`), mas `cdn.shopify.com` está bloqueado pela política de rede
-desta sessão. De uma máquina com acesso:
+Os galões ficam versionados em `assets/raw/products/`. As fotos dos brindes
+estão mapeadas em `build/make-boatshow-assets.py` (`STORE_PHOTOS`), mas
+`cdn.shopify.com` está bloqueado pela política de rede desta sessão. De uma
+máquina com acesso:
 
 ```bash
-python3 build/fetch-product-images.py   # baixa e compõe as 4 imagens de produto
+python3 build/fetch-product-images.py   # baixa só os brindes e recompõe as 4 placas
 ```
 
 Isso sobrescreve só os `product-*.jpg`, nas duas peças, com os mesmos nomes e
 dimensões — **nenhuma mudança no HTML**. Quando a arte final do Borges chegar
 (seg 12/10), basta gravar os arquivos por cima dos mesmos nomes.
+
+O galão do Hydro Coat veio em 450x600, contra 1500x2000 dos outros três. No
+tamanho de exibição (120px de largura) segura bem, mas é o candidato número um
+a ser substituído se o Borges tiver uma versão maior.
 
 ## Links
 

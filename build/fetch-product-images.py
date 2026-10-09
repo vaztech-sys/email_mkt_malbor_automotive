@@ -1,64 +1,46 @@
 #!/usr/bin/env python3
-"""Replace the Boat Show product placeholders with the real store photos.
+"""Drop the free-size photo into the Boat Show product plates.
 
-Run this from any machine that can reach cdn.shopify.com (this session's egress
-policy blocks it). It downloads the gallon and the free small size for each
-product, composites them onto the same #f4f4f2 plate at the exact size the HTML
-expects, and overwrites the placeholder in both e1/ and e2/ asset folders.
+The gallons are already real: they live in assets/raw/products/ and the build
+composites them with a typographic "+ FREE <size>" lockup. What is still
+missing is the photo of the free size (473ml / 946ml). Those live on
+cdn.shopify.com, which this session's egress policy blocks.
+
+Run this from any machine that can reach the CDN:
 
     python3 build/fetch-product-images.py
 
-Nothing in the HTML changes — the filenames and dimensions are identical.
-If Borges's final art arrives first, just drop his files over the same names.
+It fetches only the small sizes, rebuilds each plate as gallon + free size at
+the exact dimensions the HTML already expects, and overwrites the files in both
+e1/ and e2/. No markup changes. If Borges's final art arrives first, just drop
+his files over the same names instead of running this.
 """
+import importlib.util
 import io
 import urllib.request
 from pathlib import Path
 from PIL import Image
 
-import sys
-
-# single source of truth for the URLs and the output folders; importing is safe
-# because that module keeps its generation behind a __main__ guard
-sys.path.insert(0, str(Path(__file__).parent))
-import importlib.util
+# make-boatshow-assets.py keeps its generation behind a __main__ guard, so
+# importing it only gives us the URL table, the product list and compose_plate
 spec = importlib.util.spec_from_file_location("mba", Path(__file__).with_name("make-boatshow-assets.py"))
 mba = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mba)
-
-PLATE = "#f4f4f2"
-W, H = 258 * 2, 190 * 2
-PAD = 24
 
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": "malbor-email-build"})
     with urllib.request.urlopen(req, timeout=30) as r:
-        return Image.open(io.BytesIO(r.read())).convert("RGBA")
+        return Image.open(io.BytesIO(r.read()))
 
 
-def compose(gallon, small):
-    """Gallon on the left at full height, the free small size beside it, baselines aligned."""
-    plate = Image.new("RGBA", (W, H), PLATE)
-    gh = H - 2 * PAD
-    gw = round(gallon.width * gh / gallon.height)
-    gallon = gallon.resize((gw, gh), Image.LANCZOS)
-    sh = round(gh * 0.60)
-    sw = round(small.width * sh / small.height)
-    small = small.resize((sw, sh), Image.LANCZOS)
-    total = gw + 16 + sw
-    x = (W - total) // 2
-    base = PAD + gh
-    plate.alpha_composite(gallon, (x, base - gh))
-    plate.alpha_composite(small, (x + gw + 16, base - sh))
-    out = Image.new("RGBA", (W, H), PLATE)
-    out.alpha_composite(plate)
-    return out.convert("RGB")
-
-
-for slug, (gal_url, small_url) in mba.STORE_PHOTOS.items():
-    img = compose(fetch(gal_url), fetch(small_url))
+for slug, name, gallon_size, free_size, art in mba.PRODUCTS:
+    small_url = mba.STORE_PHOTOS[slug][1]
+    plate = mba.compose_plate(Image.open(mba.GALLONS / art), fetch(small_url), free_size)
     for out in mba.OUTS:
-        img.save(out / f"{slug}.jpg", quality=84, optimize=True, progressive=True)
-    print(f"  {slug}.jpg  {img.size}  <- loja")
-print("pronto — rode check.mjs e build-zip.sh nas duas pecas")
+        plate.save(out / f"{slug}.jpg", quality=84, optimize=True, progressive=True)
+    print(f"  {slug}.jpg  galao local + brinde da loja")
+
+print("\npronto. Agora:")
+print("  1. troque ARTE PARCIAL por um comentario normal em build/make-boatshow-html.py")
+print("  2. rode check.mjs e build-zip.sh nas duas pecas")

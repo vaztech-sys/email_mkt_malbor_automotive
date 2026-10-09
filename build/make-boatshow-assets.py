@@ -28,11 +28,14 @@ OUTS = [Path("email/boatshow-e1/assets"), Path("email/boatshow-e2/assets")]
 
 # Offer line-up. value = retail price of the free size, from the live store.
 PRODUCTS = [
-    ("product-hydro-coat", "HYDRO COAT", "3.78L", "473ml"),
-    ("product-nano-polymer-spray", "NANO POLYMER SPRAY", "3.78L", "473ml"),
-    ("product-max-pro-shampoo", "MAX PRO SHAMPOO", "3.78L", "946ml"),
-    ("product-deep-cleaning-apc", "DEEP CLEANING APC", "3.78L", "473ml"),
+    ("product-hydro-coat", "HYDRO COAT", "3.78L", "473ml", "hydro-coat-gallon.webp"),
+    ("product-nano-polymer-spray", "NANO POLYMER SPRAY", "3.78L", "473ml", "nano-polymer-spray-gallon.webp"),
+    ("product-max-pro-shampoo", "MAX PRO SHAMPOO", "3.78L", "946ml", "max-pro-shampoo-gallon.webp"),
+    ("product-deep-cleaning-apc", "DEEP CLEANING APC", "3.78L", "473ml", "deep-cleaning-apc-gallon.webp"),
 ]
+
+GALLONS = RAW / "products"
+CARD = (258 * X2, 190 * X2)
 
 # Live store photo URLs, verified against the Shopify catalogue on 7 Oct 2026.
 STORE_PHOTOS = {
@@ -66,40 +69,57 @@ def cover(im, size):
     return im.crop((l, t, l + tw, t + th))
 
 
-def placeholder_product(name, gallon, small, size):
-    """A plate that cannot be mistaken for finished art."""
-    w, h = size
-    im = Image.new("RGB", (w, h), PLATE)
-    d = ImageDraw.Draw(im)
-    # dashed frame
-    step, dash = 24, 13
-    for x in range(10, w - 10, step):
-        d.line([(x, 10), (min(x + dash, w - 10), 10)], fill=MUTED, width=3)
-        d.line([(x, h - 10), (min(x + dash, w - 10), h - 10)], fill=MUTED, width=3)
-    for y in range(10, h - 10, step):
-        d.line([(10, y), (10, min(y + dash, h - 10))], fill=MUTED, width=3)
-        d.line([(w - 10, y), (w - 10, min(y + dash, h - 10))], fill=MUTED, width=3)
-    # two bottle silhouettes: the gallon and the free small size
-    gw, gh = int(w * 0.20), int(h * 0.52)
-    gx, gy = int(w * 0.24), int(h * 0.30)
-    d.rounded_rectangle([gx, gy, gx + gw, gy + gh], radius=10, outline=INK, width=4)
-    d.rectangle([gx + gw // 3, gy - 16, gx + 2 * gw // 3, gy], outline=INK, width=4)
-    sw_, sh_ = int(w * 0.12), int(h * 0.30)
-    sx, sy = int(w * 0.60), gy + gh - sh_
-    d.rounded_rectangle([sx, sy, sx + sw_, sy + sh_], radius=7, outline=ORANGE, width=4)
-    d.rectangle([sx + sw_ // 3, sy - 12, sx + 2 * sw_ // 3, sy], outline=ORANGE, width=4)
-    d.text((sx + sw_ + 10, sy + sh_ // 2 - 10), "FREE", font=ImageFont.truetype(BOLD, 18), fill=ORANGE)
+def trim(im):
+    bb = im.getbbox()
+    return im.crop(bb) if bb else im
 
-    def centred(text, y, font, fill):
-        f = ImageFont.truetype(*font)
-        tw = d.textbbox((0, 0), text, font=f)[2]
-        d.text(((w - tw) // 2, y), text, font=f, fill=fill)
 
-    centred(name, int(h * 0.09), (BOLD, 22), INK)
-    centred(f"{gallon}  +  FREE {small}", int(h * 0.17), (REG, 17), MUTED)
-    centred("PLACEHOLDER", int(h * 0.845), (BOLD, 19), ORANGE)
-    centred("foto da loja / arte final Borges 12-10", int(h * 0.915), (REG, 15), MUTED)
-    return im
+def compose_plate(gallon, small, free_size, size=None):
+    """The product plate: the real gallon, plus the free size beside it.
+
+    `small` is the photo of the free size when we have one; until then it is
+    None and we set a typographic lockup in its place rather than inventing
+    product art.
+    """
+    w, h = size or CARD
+    plate = Image.new("RGBA", (w, h), PLATE)
+    pad = 30
+    gh = h - 2 * pad
+    gallon = trim(gallon.convert("RGBA"))
+    gw = round(gallon.width * gh / gallon.height)
+    gallon = gallon.resize((gw, gh), Image.LANCZOS)
+
+    d = ImageDraw.Draw(plate)
+    if small is not None:
+        small = trim(small.convert("RGBA"))
+        sh = round(gh * 0.62)
+        sw = round(small.width * sh / small.height)
+        total = gw + 18 + sw
+        x = (w - total) // 2
+        plate.alpha_composite(gallon, (x, pad))
+        plate.alpha_composite(small, (x + gw + 18, pad + gh - sh))
+        f = ImageFont.truetype(BOLD, 20)
+        label = f"FREE {free_size}"
+        tw = d.textbbox((0, 0), label, font=f)[2]
+        d.text((x + gw + 18 + (sw - tw) // 2, pad + gh - sh - 28), label, font=f, fill=ORANGE)
+    else:
+        # no photo of the free size yet -> typographic lockup, never fake art
+        block_w = 190
+        total = gw + 24 + block_w
+        x = max(pad, (w - total) // 2)
+        plate.alpha_composite(gallon, (x, pad))
+        bx = x + gw + 24
+        cy = h // 2
+        fp = ImageFont.truetype(BOLD, 60)
+        ff = ImageFont.truetype(BOLD, 34)
+        fs = ImageFont.truetype(BOLD, 40)
+        d.text((bx, cy - 92), "+", font=fp, fill=ORANGE)
+        d.text((bx, cy - 18), "FREE", font=ff, fill=ORANGE)
+        d.text((bx, cy + 22), free_size, font=fs, fill=INK)
+        # No "pending" wording is burned into the plate: this lockup is
+        # ship-ready on its own. The outstanding gift photo is tracked by the
+        # ARTE PARCIAL comment in the HTML and by check.mjs.
+    return flatten(plate, PLATE)
 
 
 def write(im, name, display, jpeg=True, targets=None):
@@ -127,9 +147,9 @@ def main():
     car = Image.open(RAW / "2268ffca474745f43f019408011a6fedd8610aec.png").convert("RGBA")
     write(flatten(cover(car, (226 * X2, 151 * X2)), PLATE), "auto-block", "226x151", targets=OUTS[:1])  # E1 only
 
-    print("product plates (ALL PLACEHOLDERS):")
-    for slug, name, gallon, small in PRODUCTS:
-        write(placeholder_product(name, gallon, small, (258 * X2, 190 * X2)), slug, "258x190")
+    print("product plates (galao real da loja; foto do brinde pendente):")
+    for slug, name, gallon, small, art in PRODUCTS:
+        write(compose_plate(Image.open(GALLONS / art), None, small), slug, "258x190")
 
 
 if __name__ == "__main__":

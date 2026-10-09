@@ -159,7 +159,9 @@ console.log("\n14) ARTE PENDENTE");
 const ph = (html.match(/ASSET-BASE-REPLACE-ME/g) || []).length;
 ph ? wrn(`${ph} ocorrencias de ASSET-BASE-REPLACE-ME (build-zip.sh troca por images/)`) : ok("sem placeholders de asset base");
 const art = (html.match(/PLACEHOLDER:/g) || []).length;
-art ? wrn(`${art} imagem(ns) ainda com arte placeholder — trocar pelas fotos da loja / arte do Borges (12/10)`) : ok("nenhuma arte placeholder");
+art ? wrn(`${art} imagem(ns) 100%% placeholder — trocar pela arte do Borges (12/10)`) : ok("nenhuma arte totalmente placeholder");
+const partial = (html.match(/ARTE PARCIAL:/g) || []).length;
+partial ? wrn(`${partial} imagem(ns) com arte parcial — galao real, falta a foto do brinde`) : ok("nenhuma arte parcial");
 
 await b.close();
 console.log("\n" + "=".repeat(60));
