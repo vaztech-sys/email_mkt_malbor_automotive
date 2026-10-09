@@ -49,10 +49,11 @@ Perfect Glass e Max Shield ficam fora — o `check.mjs` falha se forem citados.
 
 ## Arte pendente
 
-Dois níveis, ambos marcados no HTML e contados pelo `check.mjs`:
+Hero e bloco automotivo já estão com a arte aprovada pelo cliente
+(`hero-sailboat.webp` e `auto-chevrolet.webp`, versionadas em `assets/raw/`).
 
-- `<!-- PLACEHOLDER: -->` — **1 imagem**, `hero-boatshow.jpg` (1200x540):
-  abertura marine emprestada da peça náutica, aguardando o Borges.
+Resta um nível, marcado no HTML e contado pelo `check.mjs`:
+
 - `<!-- ARTE PARCIAL: -->` — **4 imagens**, `product-*.jpg` (516x380): o galão
   é a foto real da loja; no lugar da foto do brinde há um lockup tipográfico
   `+ FREE 473ml` / `+ FREE 946ml`. É uma arte vendável como está — não há

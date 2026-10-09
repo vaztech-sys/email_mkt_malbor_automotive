@@ -95,11 +95,10 @@ def head(title, preheader):
   </tr>
 
   <!-- ============ HERO ============ -->
-  <!-- PLACEHOLDER: arte final do Borges (12/10). Trocar assets/hero-boatshow.jpg, 1200x540. -->
   <tr>
     <td align="center" style="padding:0;font-size:0;line-height:0;">
       <a href="{LP}" target="_blank" style="text-decoration:none;">
-        <img src="{A}/hero-boatshow.jpg" width="600" height="270" alt="Malbor Coatings" class="em-img-full" style="display:block;width:100%;max-width:600px;height:auto;border:0;" />
+        <img src="{A}/hero-boatshow.jpg" width="600" height="270" alt="Varnished wooden sailboat moored at the dock" class="em-img-full" style="display:block;width:100%;max-width:600px;height:auto;border:0;" />
       </a>
     </td>
   </tr>
@@ -309,7 +308,7 @@ e1 += f"""
             </table>
           </td>
           <td class="em-stack" width="226" valign="top" style="width:226px;font-size:0;line-height:0;">
-            <img src="{A}/auto-block.jpg" width="226" height="151" alt="Car finished with Malbor coatings" class="em-img-full" style="display:block;width:100%;max-width:226px;height:auto;border:0;border-radius:16px;" />
+            <img src="{A}/auto-block.jpg" width="226" height="151" alt="Malbor coating being applied to a classic car" class="em-img-full" style="display:block;width:100%;max-width:226px;height:auto;border:0;border-radius:16px;" />
           </td>
         </tr>
       </table>

@@ -23,7 +23,8 @@ REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 AUTO = Path("email/automotive/assets")
 RAW = Path("assets/raw")
-MARINES = Path("/home/user/vaztech-sys/email_mkt_malbor_marines/email/marines/assets")
+HERO_SRC = RAW / "hero-sailboat.webp"
+AUTO_SRC = RAW / "auto-chevrolet.webp"
 OUTS = [Path("email/boatshow-e1/assets"), Path("email/boatshow-e2/assets")]
 
 # Offer line-up. value = retail price of the free size, from the live store.
@@ -139,12 +140,12 @@ def main():
             shutil.copy2(AUTO / f, out / f)
         print(f"  {f}")
 
-    print("hero (PLACEHOLDER — marine opening, pending Borges):")
-    hero = Image.open(MARINES / "hero-marina.jpg").convert("RGBA")
+    print("hero (marine opening, arte aprovada pelo cliente):")
+    hero = Image.open(HERO_SRC).convert("RGBA")
     write(flatten(cover(hero, (600 * X2, 270 * X2)), "#12100c"), "hero-boatshow", "600x270")
 
-    print("automotive block photo:")
-    car = Image.open(RAW / "2268ffca474745f43f019408011a6fedd8610aec.png").convert("RGBA")
+    print("automotive block photo (arte aprovada pelo cliente):")
+    car = Image.open(AUTO_SRC).convert("RGBA")
     write(flatten(cover(car, (226 * X2, 151 * X2)), PLATE), "auto-block", "226x151", targets=OUTS[:1])  # E1 only
 
     print("product plates (galao real da loja; foto do brinde pendente):")
