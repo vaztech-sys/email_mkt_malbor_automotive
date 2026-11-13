@@ -12,7 +12,7 @@ botões com VML para o Outlook, entrega por *Import zip*.
 |---|---|
 | `index.html` | HTML de e-mail |
 | `plain-text.txt` | Versão texto puro |
-| `assets/` | 2 arquivos (1 imagem ainda provisória — ver abaixo) |
+| `assets/` | 2 arquivos, 171 KB (arte final do Figma) |
 | `check.mjs` | Verificador da campanha |
 | `build-zip.sh` | Monta `blackfriday-e4-mailchimp.zip` |
 
@@ -34,21 +34,16 @@ ou mais (podem ser misturados) e 1 SiO2 Top Sealant grátis por frasco.
 Desconto automático no checkout, sem cupom. Só retirada local em Pompano Beach
 e no Safe Harbor Lauderdale Marine Center.
 
-## Imagens provisórias
+## Imagens
 
-O E4 usa uma única imagem, ainda **placeholder** — um quadro escuro escrito
-"TROCAR". O `check.mjs` avisa enquanto estiver lá.
+O E4 usa uma única imagem, a **arte final do Figma**: o frame
+`email-hero-malbor` (node `163:146`) do arquivo `[MALBOR] Email_mkt`
+(`w963vkkHw77eIJtVseKOIH`), página BLACK FRIDAY, seção "E-mails Black Friday —
+imagens (exportar)". Export em JPG 1200×1189 (frame de 1080 em escala 1,1111).
 
-| Frame no Figma | Arquivo | Origem |
-|---|---|---|
-| `email-hero-malbor` | `email-hero-malbor.jpg` | slide 1 do carrossel |
-
-É o mesmo arquivo do E2: ao exportar, grave nas duas pastas.
-
-Arquivo "[MALBOR] Redes Sociais", página "Calendário (BLACK FRIDAY)", seção
-"E-mails Black Friday — imagens (exportar)". Exportar em **JPG 1200w** e gravar
-por cima dos mesmos nomes em `assets/` — o HTML não muda. Depois rodar
-`node check.mjs` e `./build-zip.sh`.
+É o mesmo arquivo do E2. Para reexportar, salve o JPG num diretório e rode
+`python3 build/make-blackfriday-assets.py <dir>`, que grava nas duas peças e
+recomprime (ver o README do E2 para o porquê).
 
 ## Links
 

@@ -32,13 +32,7 @@ const CFG = {
   "datas": [
     "November 27"
   ],
-  "provisorias": [
-    "email-hero-malbor.jpg",
-    "email-boat.jpg",
-    "email-car.jpg",
-    "email-interior.jpg",
-    "email-gift.jpg"
-  ]
+  "provisorias": []
 };
 const html = fs.readFileSync(DIR + "index.html", "utf8");
 const txt  = fs.readFileSync(DIR + "plain-text.txt", "utf8");

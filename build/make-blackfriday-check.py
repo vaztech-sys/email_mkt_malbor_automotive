@@ -13,14 +13,13 @@ PIECES = {
         "titulo": "Black Friday: 25% off the Professional Line",
         "preheader": "35% off when you buy 5, plus a free SiO2 Top Sealant. Nov 27–30.",
         "datas": ["November 27"],
-        "provisorias": ["email-hero-malbor.jpg", "email-boat.jpg", "email-car.jpg",
-                        "email-interior.jpg", "email-gift.jpg"],
+        "provisorias": [],
     },
     "blackfriday-e4": {
         "titulo": "Ends tonight: 25% off the Professional Line",
         "preheader": "35% when you buy 5, plus a free SiO2 Top Sealant.",
         "datas": ["November 30"],
-        "provisorias": ["email-hero-malbor.jpg"],
+        "provisorias": [],
     },
 }
 COMMON = {"conta": "malbor", "utm_content": "bf-malbor",

@@ -12,7 +12,7 @@ botões com VML para o Outlook, entrega por *Import zip*.
 |---|---|
 | `index.html` | HTML de e-mail |
 | `plain-text.txt` | Versão texto puro |
-| `assets/` | 7 arquivos (5 imagens ainda provisórias — ver abaixo) |
+| `assets/` | 7 arquivos, 779 KB (artes finais do Figma) |
 | `check.mjs` | Verificador da campanha |
 | `build-zip.sh` | Monta `blackfriday-e2-mailchimp.zip` |
 
@@ -34,23 +34,44 @@ ou mais (podem ser misturados) e 1 SiO2 Top Sealant grátis por frasco.
 Desconto automático no checkout, sem cupom. Só retirada local em Pompano Beach
 e no Safe Harbor Lauderdale Marine Center.
 
-## Imagens provisórias
+## Imagens
 
-As 5 imagens de conteúdo ainda são **placeholders** — um quadro escuro escrito
-"TROCAR". O `check.mjs` avisa enquanto estiverem lá.
+As 5 imagens são as **artes finais do Figma**, exportadas em JPG 1200w.
 
-| Frame no Figma | Arquivo | Origem |
-|---|---|---|
-| `email-hero-malbor` | `email-hero-malbor.jpg` | slide 1 do carrossel |
-| `email-boat` | `email-boat.jpg` | slide 2 (For the boat) |
-| `email-car` | `email-car.jpg` | slide 3 (For the car) |
-| `email-interior` | `email-interior.jpg` | slide 4 (Interior & trim) |
-| `email-gift` | `email-gift.jpg` | story do brinde de 24/11 |
+Arquivo `[MALBOR] Email_mkt` (`w963vkkHw77eIJtVseKOIH`), página BLACK FRIDAY,
+seção "E-mails Black Friday — imagens (exportar)":
 
-Arquivo "[MALBOR] Redes Sociais", página "Calendário (BLACK FRIDAY)", seção
-"E-mails Black Friday — imagens (exportar)". Exportar em **JPG 1200w** e gravar
-por cima dos mesmos nomes em `assets/` — o HTML não muda. Depois rodar
-`node check.mjs` e `./build-zip.sh`.
+| Frame | Node | Arquivo | Export |
+|---|---|---|---|
+| `email-hero-malbor` | `163:146` | `email-hero-malbor.jpg` | 1200×1189 |
+| `email-boat` | `163:165` | `email-boat.jpg` | 1200×723 |
+| `email-car` | `163:185` | `email-car.jpg` | 1200×645 |
+| `email-interior` | `163:208` | `email-interior.jpg` | 1200×617 |
+| `email-gift` | `163:234` | `email-gift.jpg` | 1200×745 |
+
+Os frames têm 1080 de largura, então o export sai em **escala 1,1111** para dar
+os 1200 que o HTML espera.
+
+Para reexportar, salve os JPG num diretório e rode:
+
+```bash
+python3 build/make-blackfriday-assets.py <dir-com-os-jpg>
+```
+
+O script confere a largura, recomprime em JPEG progressivo q86 sem subamostragem
+de croma e grava nas duas peças. A recompressão não é opcional: os exports do
+Figma somam 2,7 MB, o que deixaria o E2 pesado demais para abrir no celular; a
+q86 em 4:4:4 o conjunto cai para 779 KB sem diferença visível no gradiente
+escuro nem sangramento do laranja.
+
+### Defeito conhecido no `email-gift`
+
+O frame começa 10 unidades abaixo do topo da linha *"with every Professional
+Line bottle."*, então os ascendentes dessa linha saem cortados no export. A
+frase é redundante — a legenda logo abaixo da imagem já diz *"Free with every
+Professional Line bottle."* Duas saídas, as duas no Figma: descer o frame uns
+60px para deixar só os frascos, ou subir 10px para encaixar a linha inteira.
+Depois é só reexportar e rodar o script acima.
 
 ## Links
 
